@@ -2,7 +2,7 @@ Presentation made with https://github.com/regebro/hovercraft
 
 ``> make``
 
-Create in 'outdir' the presentation
+Create the presentation in 'outdir' 
 
 ``> open outdir/index.html``
 
