@@ -27,6 +27,7 @@ What is Django
 - Easy learning web framework 
 - Really well documented framework
 - Rapid prototyping framework
+- Django / python runs on Microsoft Windows
 
 .. note::
 
@@ -173,7 +174,7 @@ Typical deployment
 
 ----
 
-Level 2: / inside django
+Level 2: Inside django
 ========================
 
 .. image:: img/pony.png
@@ -239,6 +240,9 @@ Function arguments
 .. code:: python
 
 	def my_function(*args, **kwargs):
+	   """
+	   This is a little help for this function
+	   """
 	   print "args are: {0}".format(args)
 		print "kwargs are: {0}".format(kwargs)
 	
@@ -246,7 +250,11 @@ Function arguments
 	my_function('test', position=10, other='hello')
 	# args are: ('test',)
 	# kwargs are: {'position': 10, 'other': 'hello'}
-
+	print my_function.func_doc
+	# 
+	#  This is a little help for this function
+	#
+	
 ----
 
 Python class
@@ -260,10 +268,13 @@ Python class
 		    self.age = age
 
 		class Developer(Person):
-		  skills = []
-		  def __init__(self, name, age, skills):
+		  skills = [] #  NOT A GOOD idea
+		  def __init__(self, name, age, skills=None):
 		    super(Developer, self).__init__(name,age)
-		    self.skills = ["skill:{0}".format(s) for s in skills]
+		    if skills is None:
+		      self.skills = []
+		    else:
+		      self.skills = ["skill:{0}".format(s) for s in skills]
 
 		  def __str__(self):
 		    return "{0} / {1} / {2}".format(
@@ -274,7 +285,105 @@ Python class
 		print john
 		# John Doe / 33 / ['skill:python', 'skill:java']
 
+.. note::
+
+	class attribute are bad, each instance reference it. copy should be handled in __init__
+
+----
+
+Multiple Inheritance
+====================
+
+.. code:: python
+
+   class A(object):
+     def do_it(self):
+       print "Call A"
+    
+    
+   class B(object):
+     def do_it(self):
+       print "Call B"
+    
+   class C(A, B):
+     def do_it(self):
+       super(C, self).do_it()
+       B.do_it(self)
+       print "Call C"
+    
+   c = C()
+   c.pony()
+   # Call A
+   # Call B
+   # Call C
+
+
+----
+
+
+Callable
+--------
+
+.. code:: python
+
+	class Talker(object):
+	   def __init__(self, name):
+		
+	   # this method makes this class callable
+	   def __call__(self, message="nothing"):
+	      print "{0} just said: '{1}'".format(self.name, message)
+
+	talker = Talker("Django")
+	talker()
+	# Django just sait 'nothing'
+	talker("Cora, say goodbye to Miss Laura.")
+	# Django just said 'Cora, say goodbye to Miss Laura.'
+	print "Is callable {0}".format(callable(talker))
+	# Is callable True
 	
+----
+
+Duck typing
+-----------
+
+*When I see a bird that walks like a duck, swims like a duck and quacks like a duck, I call that bird a duck.*
+
+.. code:: python
+
+	class CustomDict(object):
+	   def __getitem__(self, key):
+	
+	class MutableDict(CustomDict):
+	   def __setitem__(self, key, value):
+	   def __delitem__(self, key):
+	
+	class GetFallback(object):
+	   def __getattr__(self, name):
+
+----
+
+Decorators
+----------
+
+
+----
+
+Python good practices
+=====================
+
+- PEP-8: all about code formatting
+- PEP-20: all about python philosophy
+- test your code
+- virtualenv to isolate development
+- write tests
+- run tests
+
+.. code:: 
+	
+	$ python
+	...
+	>>> import this
+
 ----
 
 Setting up a django project
@@ -314,33 +423,65 @@ Setting up a application
 			views.py
 
 .. note::
+
 	What is an application
 	
 ----
 
+Settings
+========
+
+.. code::
+
+	./facile_backlog/settings.py
+	
+.. code:: python
+
+   DATABASES = {
+      'default': {
+         'ENGINE': 'django.db.backends.sqlite3'
+         'NAME': 'database.sqlite',
+      }
+   }
+   ...
+   INSTALLED_APPS = (
+      ...,
+      'django.contrib.admin',
+      'facile_backlog.backlog'
+   )
+
+----
+
+
 The model
 =========
 
+.. code::
+
+	./facile_backlog/backlog/models.py
+	
 .. code:: python
 
 	from django.conf import settings
 	from django.db import models
 	from django.utils.translation import ugettext_lazy as _
 	
-	User = settings.AUTH_USER_MODEL #  'core.User' string
-	
+		
 	class Project(models.Model):
-		name = models.CharField(_('Name'), max_length=1023)
-		bio = models.TextField(_('Biography'), help_text=MARKDOWN,
-		                       blank=True)
-		owner = models.ForeignKey(User, verbose_name=_('Owner'),
-		                  	     related_name='organizations')
+	   name = models.CharField(_('Name'), max_length=1023)
+	   active = models.BooleanField(default=True)
+	   description = models.TextField(_('Description'),
+	   help_text=MARKDOWN,
+	      blank=True)
+	   class Meta:
+	      ordering = ('name',)
+
 
 	class Backlog(models.Model):
-		name = models.CharField(_('name'), max_length=1023)
-		project = models.ForeignKey(Project, 
-											 verbose_name=_('Project'),
-									       related_name='people')
+	   name = models.CharField(_('name'), max_length=1023)
+	   project = models.ForeignKey(Project, 
+	      verbose_name=_('Project'),
+	      related_name='backlogs')
 		
 		
 .. note:: 
@@ -351,17 +492,185 @@ The model
 
 ----
 
-The urls
-=========
+
+Play with ORM
+=============
+
+.. code:: python
+
+   from facile_backlog.backlog import Project
+	
+   project = Project(name="First project")
+   project.description = "My first project created with django"
+   project.save()
+	
+   all_active_project = Project.objects.filter(active=True)
+   for project in all_active_project:
+      print "Project: {0}".format(project.name)
+
+	
+----
+
+More play with ORM
+==================
+
+.. code:: python
+
+   from facile_backlog.backlog import Backlog
+	
+   backlog = Backlog(project=project, name="Main Backlog")
+   backlog.save()
+	
+   for project in Project.objects.all():
+      print "Project: {0} with {1} backlogs".format(
+            project.name, 
+            project.backlogs.count()
+         )
+
+	
+----
+
+ORM abilities
+-------------
+
+- Transactions ``@transaction.atomic``
+- Rich filter interface
+- Bulk insert
+	- ``Entry.objects.bulk_create([])``
+- Raw sql query
+	- ``Project.objects.raw('SELECT * FROM ...')``
+- Index management
+- Mutli database
 
 ----
 
-Django Views
-============
+URL resolver - root
+===================
 
+.. code::
+	
+	./facile_backlog/urls.py
+	
+.. code:: python
+
+	from django.conf.urls import patterns, include, url
+	from django.contrib import admin
+	
+	admin.autodiscover()
+	
+	robots = lambda _: HttpResponse('User-agent: *\nDisallow:\n',
+	     mimetype='text/plain')
+	
+	urlpatterns = patterns('',
+	   url(r'^robots.txt$', robots),
+	   url(r'facile_backlog/', include('facile_backlog.backlog.urls')),
+	   url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+	   url(r'^admin/', include(admin.site.urls)),
+	)
+	
+.. note::
+
+	patterns(prefix, list_urls) --> prefix all url names
+	
 
 ----
 
+URL resolver - application
+==========================
+
+.. code::
+	
+	./facile_backlog/backlog/urls.py
+	
+.. code:: python
+
+	from django.conf.urls import patterns, include, url
+	from .views import project_list, home, project_detail
+		
+	urlpatterns = patterns('',
+	   url(r'^$', home, name="home"),
+	   url(r'projects/$', project_list, name="project_list"),
+	   url(r'projects/(?P<project_id>[\w:@\.-]+/$', 
+	      project_detail, 
+	      name="project_detail"),
+	   url(r'projects/(?P<project_id>[\w:@\.-]+/$', 
+	      project_detail,
+	      {'more_info': True},
+	      name="project_detail"),
+	)
+
+----
+
+
+Views
+=====
+
+View is a 'callable'
+   lambda / function / object with __call__ method
+	
+.. code:: python
+
+   from django.http import HttpResponse
+   from django.shortcuts import redirect
+   import datetime
+
+   def display_time(request):
+      now = datetime.datetime.now()
+      html = "<html><body>It is now {0}.</body></html>",format(now)
+      return HttpResponse(html)
+
+   def redirect_me(request):
+      return redirect(reverse('my_named_url'))
+
+
+.. note::
+
+	redirect can redirect to another view redirect(view_name, kwargs)
+	redirect to URL use 302 code
+	redirect to view does not change the URL
+	
+----
+
+Views with templates
+====================
+
+.. code::
+	
+	./facile_backlog/backlog/views.py
+
+.. code:: python
+	
+	from .models import Project
+	
+   def project_list(request):
+      projects = Project.objects.all()
+      # ./backlog/templates/project_list.html
+      t = loader.get_template('backlog/project_list.html')
+      c = Context({'projects': projects})
+      return HttpResponse(t.render(c),
+         content_type="application/xhtml+xml")
+
+   def project_list(request):
+      return render_to_response("backlog/project_list.html",{
+            'projects': Project.objects.all()
+         }
+
+----
+
+Template
+========
+
+----
+
+Admin
+=====
+
+----
+
+Tests
+=====
+
+----
 
 Database schema migration
 =========================
@@ -373,3 +682,5 @@ Database schema migration
 
 **The End**
 ===========
+
+or start using django?
