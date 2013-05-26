@@ -13,6 +13,13 @@ img {
   width: 1024px;
 }
 
+tt {
+  background: #EFE;
+  padding: 0 0.2rem;
+  border: 1px solid #9B9;
+}
+
+
 p {
     font-weight: normal;
     margin-bottom: 0.3em;
@@ -42,18 +49,18 @@ ul {
 }
 
 li {
-    font-family: serif;
+    font-family: arial;
     font-weight: normal;
     margin-bottom: 0.3em;
     margin-top: 0.3em;
     padding-left: 0.3em;
-    line-height: 1.4em;
+    line-height: 1.2em;
     text-align: left;
 }
 
 a {
     text-decoration: none;
-    color: black;
+    color: #060;
 }
 
 .hidden {

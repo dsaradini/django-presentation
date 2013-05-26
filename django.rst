@@ -27,13 +27,27 @@ What is Django
 - Easy learning web framework 
 - Really well documented framework
 - Rapid prototyping framework
-- Django / python runs on Microsoft Windows
+- Django run on python and jython ( Linux, MacOS, Windwows, ...)
 
 .. note::
 
    - Django is not new, project started in 2004
 	- Can start working with really few knowledge of python
-	
+
+----
+
+Other web framework
+===================
+
+- JVM
+	- Grails (Groovy) *SpringSource*
+	- Play! ( scala ) 
+	- Spring Roo (java) *SpringSource*
+- Ruby
+	- Ruby on Rails
+
+- PHP, ASP.NET, Perl, ...
+
 ----
 
 Who is using Django
@@ -55,8 +69,6 @@ Who is using Django
 How "good" is django
 ====================
 
-*http://stackoverflow.com/questions/886221/does-django-scale*
-
 **Single machine, Intel Core i7 32Gb RAM**
 
 - Running **24 / 7**
@@ -64,6 +76,8 @@ How "good" is django
 - **500'000** hit / hour
 - **1'000** concurrent user
 - **240** concurrent requests 
+
+http://stackoverflow.com/questions/886221/does-django-scale
 
 ----
 
@@ -76,6 +90,23 @@ Where django is not so "good"
 - NoSQL database support is tricky ( becoming better )
 
 ----
+
+Django is not a magical wand
+============================
+
+- Careful database design.
+- Choose the right "package"
+- Avoid doing "heavy" work on a http request
+- Careful with caching
+- Serve static file outside django
+
+.. note::
+	
+	- What is heavy work? 20ms?
+	
+----
+
+	
 
 Django project structure
 ========================
@@ -91,11 +122,16 @@ Django project structure
 Supported database
 ==================
 
-- In django project
+**In django project**
 	- Postgres, SQLite (dev), Oracle, Mysql
-- 3rd party
+
+	
+**3rd party**
 	- Sybase, DB2, SQL Server, Firebird, ODBC, ...
 	
+
+Database migration tool available
+
 ----
 
 
@@ -109,24 +145,26 @@ Components
 
 	- This is not HTML targeted
 	- View can generate JSON / XML ( rest framework )
-	- Caching is transparent
+	- Caching (careful about invalidation)
 	- About WSGI ( dev connector / gunicorn / uWSGI )
-	
+	- orange dash square is the minimum server interaction
+
 ----
 
 Other components
 ================
 
-- Web admin (django.contrib.admin)
-- Command line 
-- HTTP(s) middleware
+- Admin portal
+- Command line  
+- HTTP(s) middleware 
 - Template tags
 - Database backend
+- Database router
 - File storage
 - ...
 
 .. note:: 
-	- Some components are provided by applications.
+	- Some components are provided by 3rd party applications.
 	- Application can introspect project to enhance its behavior
 
 ----
@@ -134,23 +172,23 @@ Other components
 Useful Django projects
 ======================
 
-- **django-rest-framework.** ReST views on model
-- **django-social-auth** Facebook, Twitter... authentication
-- **django-imagekit** Automated image processing
-- **django-auth-ldap** LDAP authentication
-- **django-debug-toolbar** Tool bar on development page 
-- **django-cms** CMS by "divio" Zurich company
-- **django-getpaid** Payment gateway integration
+- ``django-rest-framework`` ReST views on model
+- ``django-social-auth`` Facebook, Twitter... authentication
+- ``django-imagekit`` Automated image processing
+- ``django-auth-ldap`` LDAP authentication
+- ``django-debug-toolbar`` Tool bar on development page 
+- ``django-cms`` CMS by "divio" Zurich company
+- ``django-getpaid`` Payment gateway integration
 
-**https://www.djangopackages.com/**
+https://www.djangopackages.com/ 
 
 ----
 
 Free admin portal
 =================
 
-- Generate admin based on model
-- Highly customizable front-end
+- Generate admin site based on model
+- Fully customizable front-end
 - Admin portal enhanceable by 3rd party project
 
 .. image:: img/admin_site.png
@@ -158,11 +196,12 @@ Free admin portal
 .. note:: 
 
 	- Talk also about debug-toolbar
+	- maybe demo on exopoint 2.0
 	
 ----
 
-Typical deployment
-==================
+Typical dev deployment
+======================
 
 .. image:: img/deployment.png
 		:width: 800px
@@ -171,6 +210,9 @@ Typical deployment
 	Apache to replace nginx
 	Apache authentication mechanism ( delegate ) for uWSGI
 	Celery + RabbitMQ to replace RQ
+	SaltStack for deployment automation
+	logstash - exlasticsearch - kibana ( for logging )
+	demo : http://80.245.24.197:8080/
 
 ----
 
@@ -182,8 +224,8 @@ Level 2: Inside django
 	
 ----
 
-Some words on python
-====================
+Django is python
+================
 
 .. image:: img/python.png
 	:align: center
@@ -254,7 +296,43 @@ Function arguments
 	# 
 	#  This is a little help for this function
 	#
+
+	my_kwargs = {'name': 'django'}
+	my_args = [10,'hello']
+	my_function(*my_args, **my_kwargs)
 	
+----
+
+Duck typing
+-----------
+
+*When I see a bird that walks like a duck, swims like a duck and quacks like a duck, I call that bird a duck.*
+
+.. code:: python
+
+	class MyDictionary(object):
+	   def __getitem__(self, key):
+	   def __setitem__(self, key, value):
+	   def __delitem__(self, key):
+	
+	x = my_dict['my_key']
+	
+	
+	class Container(object):
+		def __contains__(self, value):
+
+	if 'django' in my_container:
+	   print "Found django in my saloon"
+	
+	class GetFallback(object):
+	   def __getattr__(self, name):
+
+	my_object.unknown_atribute
+	
+.. note::
+
+	__init__ is pronounced "dunder init"
+
 ----
 
 Python class
@@ -268,7 +346,7 @@ Python class
 		    self.age = age
 
 		class Developer(Person):
-		  skills = [] #  NOT A GOOD idea
+		  skills = [] #  NOT A GOOD idea (shared by instances)
 		  def __init__(self, name, age, skills=None):
 		    super(Developer, self).__init__(name,age)
 		    if skills is None:
@@ -313,9 +391,9 @@ Multiple Inheritance
     
    c = C()
    c.pony()
-   # Call A
-   # Call B
-   # Call C
+   # Call A (first in inheritance list)
+   # Call B (explicitly called)
+   # Call C (it's a C class after all)
 
 
 ----
@@ -343,29 +421,32 @@ Callable
 	
 ----
 
-Duck typing
------------
-
-*When I see a bird that walks like a duck, swims like a duck and quacks like a duck, I call that bird a duck.*
-
-.. code:: python
-
-	class CustomDict(object):
-	   def __getitem__(self, key):
-	
-	class MutableDict(CustomDict):
-	   def __setitem__(self, key, value):
-	   def __delitem__(self, key):
-	
-	class GetFallback(object):
-	   def __getattr__(self, name):
-
-----
 
 Decorators
 ----------
 
+Decorator are used to "alter" functions at initialization
 
+Decorator are functions returning another function
+
+.. code:: python
+
+   def decorator(func):
+      func.is_decored = True
+      return func
+
+   @decorator
+   def my_function():
+      pass
+
+   print my_function.is_decoratod
+   # True
+
+   # Decorator can have options
+   @check_role(role=ADMIN)
+   def display_my_page(*args):
+      pass
+	
 ----
 
 Python good practices
@@ -373,10 +454,9 @@ Python good practices
 
 - PEP-8: all about code formatting
 - PEP-20: all about python philosophy
-- test your code
+- have tests and run them
 - virtualenv to isolate development
-- write tests
-- run tests
+- use ``pip`` (Python package installer)
 
 .. code:: 
 	
@@ -401,6 +481,10 @@ Setting up a django project
 			urls.py
 			wsgi.py
 
+.. note::
+
+	the directory containing settings is called also "site"
+	
 ----
 
 Setting up a application
@@ -511,8 +595,8 @@ Play with ORM
 	
 ----
 
-More play with ORM
-==================
+More fun with ORM
+=================
 
 .. code:: python
 
@@ -535,17 +619,35 @@ ORM abilities
 
 - Transactions ``@transaction.atomic``
 - Rich filter interface
-- Bulk insert
-	- ``Entry.objects.bulk_create([])``
-- Raw sql query
-	- ``Project.objects.raw('SELECT * FROM ...')``
+- Bulk insert ``Backlog.objects.bulk_create([])``
+- Raw sql query ``Project.objects.raw('SELECT * FROM ...')``
 - Index management
 - Mutli database
+- Pagination using ``django.core.paginator.Paginator``
+
+https://docs.djangoproject.com/en/dev/topics/db/
 
 ----
 
-URL resolver - root
-===================
+URL resolver
+============
+
+- Ordered list or **url pattern** expressed using **regexp**
+
+- URL patterns are resolved in **order**, first match is used
+
+- Each pattern point to **one** view
+
+- A view can be used by **multiple** pattern
+
+.. note::
+
+	Careful about mutiple pattern on 1 view, view are stateless
+	
+----
+
+URL resolver - project
+======================
 
 .. code::
 	
@@ -593,25 +695,47 @@ URL resolver - application
 	   url(r'projects/(?P<project_id>[\w:@\.-]+/$', 
 	      project_detail, 
 	      name="project_detail"),
-	   url(r'projects/(?P<project_id>[\w:@\.-]+/$', 
+	   url(r'projects/(?P<project_id>[\w:@\.-]+/more/$', 
 	      project_detail,
 	      {'more_info': True},
-	      name="project_detail"),
+	      name="project_more_detail"),
 	)
 
 ----
 
+URL resolver in code
+====================
+
+Naming url pattern allows easy creation of url in code
+
+example to get URL for a given project object
+
+.. code:: python
+
+	from django.core.urlresolvers import reverse, reverse_lasy
+	
+	url = reverse('project_detail', {'project_id' : 120})
+	# /facile_backlog/backlog/projects/120
+	
+	url = reverse_lasy('project_detail', {'project_id' : 120})
+	# resolved when 'url' is used
+
+----
 
 Views
 =====
 
 View is a 'callable'
-   lambda / function / object with __call__ method
+   ``lambda`` / ``function`` / object with ``__call__`` method
 	
+Function takes at less an ``HttpRequest`` object as **first argument** and should return a ``HttpResponse`` or raise an **exception**
+
 .. code:: python
 
    from django.http import HttpResponse
    from django.shortcuts import redirect
+	from django.core.urlresolvers import reverse
+	
    import datetime
 
    def display_time(request):
@@ -657,8 +781,76 @@ Views with templates
 
 ----
 
+Class Based View
+================
+
+- Generate views using class definition
+- ``django.views.generic.View`` is the root class
+
+
+.. code:: python
+
+	# views.py
+	from django.views.generic import TemplateView
+
+	class AboutView(TemplateView):
+	   template_name = "about.html"
+		
+	   def get_context_data(self, **kwargs):
+	      context = super(AboutView, slef).get_context_data(**kwargs)
+	      context['my_info'] = u"My info"
+	      return context
+	
+	# urls.py
+	from django.conf.urls import patterns
+	
+	urlpatterns = patterns('',
+	   (r'^about/$', AboutView.as_view()),
+	)
+	
+----
+
+Class based generic views
+=========================
+
+Hierarchy of **class based view** to help dealing with model.
+
+- ``DetailView`` fetch given object from model, handle not found,...
+- ``ListView`` display a list of model object
+- ``CreateView``, ``DeleteView``, ``UpdateView`` CrUD on model
+- ``FormView`` generic form applied on model
+
+----
+
+View Mixin
+==========
+
+- Abstract class that provide a functionality 
+- Used to **compose** custom views
+
+.. code:: python
+
+	class django.views.generic.base.ContextMixin(object)
+	   def get_context_data(**kwrage):
+
+	class django.views.generic.base.TemplateResponseMixin(object)
+	   template_name = None
+	   response_calss = TemplateResponse
+	   content_type = settings.DEFAULT_CONTENT_TYPE
+	
+	   def render_to_response(self, context, **kwrage):      
+	   def get_template_name(self):
+		   
+----
+
+
 Template
 ========
+
+----
+
+Form
+====
 
 ----
 
@@ -680,7 +872,7 @@ Database schema migration
 
 ----
 
-**The End**
-===========
+The End
+=======
 
-or start using django?
+or just the beginning taming django?
