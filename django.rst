@@ -106,7 +106,6 @@ Django is not a magical wand
 	
 ----
 
-	
 
 Django project structure
 ========================
@@ -133,7 +132,6 @@ Supported database
 Database migration tool available
 
 ----
-
 
 Components
 ==========
@@ -166,6 +164,20 @@ Other components
 .. note:: 
 	- Some components are provided by 3rd party applications.
 	- Application can introspect project to enhance its behavior
+
+----
+
+
+Programing language
+===================
+
+* Everything is in **python**
+* ... excepted **templates** ...
+* that are just **unicode text** with tags
+	* ``{% if var %} ... {% endif %}`` 
+	* ``{{ var }}`` 
+* Only a Little knowledge of python is required to start working with django
+
 
 ----
 
@@ -214,6 +226,43 @@ Typical dev deployment
 	logstash - exlasticsearch - kibana ( for logging )
 	demo : http://80.245.24.197:8080/
 
+----
+
+Deploying django
+================
+
+- exoscale
+	http://www.exoscale.ch/
+	
+- Heroku 
+	https://www.heroku.com/
+	
+- Google app engine
+	https://developers.google.com/appengine/
+
+- Amazon AWS
+	http://aws.amazon.com/
+	
+----
+
+References
+==========
+
+* Django project documentation 
+	https://docs.djangoproject.com/en/dev/
+
+* Django packages directory
+	https://www.djangopackages.com/ 
+	
+* Django on github 
+	https://github.com/django/django
+
+* Expert book
+	http://prodjango.com/
+
+* This presentation
+	https://github.com/dsaradini/django-presentation
+	
 ----
 
 Level 2: Inside django
@@ -319,7 +368,7 @@ Duck typing
 	
 	
 	class Container(object):
-		def __contains__(self, value):
+	   def __contains__(self, value):
 
 	if 'django' in my_container:
 	   print "Found django in my saloon"
@@ -843,11 +892,48 @@ View Mixin
 		   
 ----
 
-
 Template
 ========
 
+- Templates are just plain unicode text string with special tags
+	- HTML pages
+	- text email content
+
+- Default template engine can be changed
+	- jinja2
+	- jquery template
+	- ...
+	
+- Default template engine is **not** a scripting language
+
 ----
+
+Template tags
+=============
+
+- Display variables from context with filters
+	- ``{{ x|date }}``
+	
+- conditional blocks
+	- ``{% if x %} .. {% elif y %} .. {% else %} .. {% endif %}``
+	
+- loop blocks
+	- ``{% for x in y %} ... {% endfor %}`` 
+
+- localization support with pluralization
+	- ``{% trans "my string" %}``
+	- ``{ %blocktrans %} ... {% endblocktrans %}``
+	
+----
+
+More template tags
+==================
+
+- block replacement
+	``{% block name %} ... {% endblock %}
+	
+
+---- 
 
 Form
 ====
@@ -876,3 +962,5 @@ The End
 =======
 
 or just the beginning taming django?
+
+https://github.com/dsaradini/django-presentation
