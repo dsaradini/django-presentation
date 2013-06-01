@@ -3,10 +3,14 @@ OUTDIR=outdir
 
 all: compile
 
-compile:
-	hovercraft $(FILE) $(OUTDIR)
+compile_highlevel: 
+	hovercraft "django-highlevel.rst" "out-highlevel"
 
-show: compile, view
+compile_dev:
+	hovercraft "django-dev.rst" "out-dev"
 
-watch: compile
-	./watch.sh
+compile: compile_dev compile_highlevel
+  
+show: compile 
+	!sh -c 'open "out-highlevel/intex.html"'
+

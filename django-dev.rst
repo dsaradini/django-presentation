@@ -10,7 +10,6 @@ Level 1: overview
 .. image:: img/django.png
 	:width: 800px
 
-
 .. note::
 	
 	2 part, part 1 for non-developer, part 2 for dev
@@ -28,6 +27,7 @@ What is Django
 - Really well documented framework
 - Rapid prototyping framework
 - Django run on python and jython ( Linux, MacOS, Windwows, ...)
+
 
 .. note::
 
@@ -88,6 +88,8 @@ Where django is not so "good"
 - Not working well with large file upload / download
 	- object store wanted
 - NoSQL database support is tricky ( becoming better )
+- Single page web application (by design)
+
 
 ----
 
@@ -95,15 +97,16 @@ Django is not a magical wand
 ============================
 
 - Careful database design.
-- Choose the right "package"
+- Choose the "right" package
 - Avoid doing "heavy" work on a http request
 - Careful with caching
 - Serve static file outside django
+- HTML and CSS knowledge required
 
 .. note::
 	
 	- What is heavy work? 20ms?
-	
+
 ----
 
 
@@ -111,7 +114,7 @@ Django project structure
 ========================
 
 .. image:: img/project.png
-	:width: 1024px
+	:width: 800px
 
 .. note::
 	- The goal of this slide is to understand modularity and reut
@@ -128,8 +131,10 @@ Supported database
 **3rd party**
 	- Sybase, DB2, SQL Server, Firebird, ODBC, ...
 	
+**Database migration tool available**
 
-Database migration tool available
+
+Django is database **agnostic** but, your project should **not**
 
 ----
 
@@ -137,7 +142,7 @@ Components
 ==========
 
 .. image:: img/overview.png
-	:width: 1024px
+	:width: 800px
 
 .. note::
 
@@ -149,16 +154,16 @@ Components
 
 ----
 
-Other components
-================
+Other extensible components
+===========================
 
 - Admin portal
-- Command line  
+- Command line tools
 - HTTP(s) middleware 
 - Template tags
 - Database backend
-- Database router
-- File storage
+- Database router (cluster)
+- File storage (static / dynamic)
 - ...
 
 .. note:: 
@@ -177,7 +182,23 @@ Programing language
 	* ``{% if var %} ... {% endif %}`` 
 	* ``{{ var }}`` 
 * Only a Little knowledge of python is required to start working with django
+* ... but knowing HTML and CSS is required
 
+.. note::
+	
+	- no XML for configuration
+	- no YAML, .cfg etc.. settings are in python
+	- use environment variable to configure
+
+----
+
+Tools to work with django
+=========================
+
+* Text editor with python highlight (vi, emacs) + Shell
+* jetBRAINS PyCharm
+* PyDev eclipse (good luck)
+* Wing IDE why not?
 
 ----
 
@@ -212,8 +233,8 @@ Free admin portal
 	
 ----
 
-Typical dev deployment
-======================
+Simple deployment
+=================
 
 .. image:: img/deployment.png
 		:width: 800px
@@ -278,6 +299,25 @@ Django is python
 
 .. image:: img/python.png
 	:align: center
+
+----
+
+:id: good-start
+
+Good start with python
+----------------------
+
+
+.. image:: img/python_start.gif
+	:height: 300px
+	
+- Python 3 vs Python 2 
+- Virtualenv
+- Composition / inheritance
+- Hard from java
+- Easier from ObjC / ASP.NET
+- Sample code in python 2.3 .. 3.3 .. ??
+- __dunder__ everywhere
 
 ----
 
@@ -352,10 +392,15 @@ Function arguments
 	
 ----
 
+:id: duck-typing
+
+
 Duck typing
 -----------
 
 *When I see a bird that walks like a duck, swims like a duck and quacks like a duck, I call that bird a duck.*
+
+.. image:: img/duck_typing.jpg
 
 .. code:: python
 
@@ -377,7 +422,8 @@ Duck typing
 	   def __getattr__(self, name):
 
 	my_object.unknown_atribute
-	
+
+
 .. note::
 
 	__init__ is pronounced "dunder init"
@@ -498,6 +544,32 @@ Decorator are functions returning another function
 	
 ----
 
+Python module
+=============
+
+Module is a **folder** with a ``__init__.py`` file inside.
+
+.. code:: python
+	
+	my_module/
+		__init__.py  # define do_something()
+		utils.py   # define print_time()
+	
+	from my_module import do_something
+	from my_module.utils import print_time
+	
+	# relative import if we are in __init__.py
+	from .utils import print_time as my_print_time
+	my_print_time()
+	
+.. note::
+
+	Do not forget __init__.py file
+	
+
+----
+
+
 Python good practices
 =====================
 
@@ -583,6 +655,9 @@ Settings
       'facile_backlog.backlog'
    )
 
+   SERVICE_URL = os.environ.get('SERVICE_URL',
+                                "http://localhost:8080/")
+
 ----
 
 
@@ -604,17 +679,15 @@ The model
 	   name = models.CharField(_('Name'), max_length=1023)
 	   active = models.BooleanField(default=True)
 	   description = models.TextField(_('Description'),
-	   help_text=MARKDOWN,
+	      help_text=MARKDOWN,
 	      blank=True)
+	
 	   class Meta:
 	      ordering = ('name',)
 
 
 	class Backlog(models.Model):
-	   name = models.CharField(_('name'), max_length=1023)
-	   project = models.ForeignKey(Project, 
-	      verbose_name=_('Project'),
-	      related_name='backlogs')
+		# ...
 		
 		
 .. note:: 
@@ -631,7 +704,7 @@ Play with ORM
 
 .. code:: python
 
-   from facile_backlog.backlog import Project
+   from facile_backlog.backlog.models import Project
 	
    project = Project(name="First project")
    project.description = "My first project created with django"
@@ -774,26 +847,38 @@ example to get URL for a given project object
 Views
 =====
 
-View is a 'callable'
+View is a **callable**
    ``lambda`` / ``function`` / object with ``__call__`` method
 	
-Function takes at less an ``HttpRequest`` object as **first argument** and should return a ``HttpResponse`` or raise an **exception**
+View function takes at less an ``HttpRequest`` object as **first argument** and should return a ``HttpResponse`` or raise an **exception**
 
 .. code:: python
 
+	def my_view(request): return HttpResponse()
+
+	
+View function can be **decorated** to enhance its behavior
+
+----
+
+View example 
+============
+
+.. code:: python
+
+   facile_backlog/views.py
+	
    from django.http import HttpResponse
    from django.shortcuts import redirect
-	from django.core.urlresolvers import reverse
+   from django.core.urlresolvers import reverse
 	
    import datetime
 
+   @login_required()
    def display_time(request):
       now = datetime.datetime.now()
-      html = "<html><body>It is now {0}.</body></html>",format(now)
+      html = "<html><body>Server time is {0}.</body></html>",format(now)
       return HttpResponse(html)
-
-   def redirect_me(request):
-      return redirect(reverse('my_named_url'))
 
 
 .. note::
@@ -813,7 +898,7 @@ Views with templates
 
 .. code:: python
 	
-	from .models import Project
+   from .models import Project
 	
    def project_list(request):
       projects = Project.objects.all()
@@ -929,8 +1014,17 @@ Template tags
 More template tags
 ==================
 
-- block replacement
-	``{% block name %} ... {% endblock %}
+- Inheritance ...
+	``{% extends "base.html" %}``
+
+- ... with block replacement
+	``{% block name %} ... {% endblock %}``
+		
+- Reusable component
+	``{% include "row.html" width row=my_object %}``
+	
+- Extensible tag library
+	``{% my_custom_tag %} ... {% endmy_custom_tag %}``
 	
 
 ---- 
@@ -938,15 +1032,73 @@ More template tags
 Form
 ====
 
+Forms are used to handle GET / POST cycle using **HTML forms**
+
+- Model's fields binding with html's form.
+- Model post validation (based on model... or not)
+- Rendering behavior using ``widget``
+
 ----
 
-Admin
-=====
 
+.. code:: python
+
+	facile_backlog/backlog/forms.py
+	
+	from django.forms import forms
+	from .models import Project
+	
+	class ProjectForm(forms.ModelForm):
+	   class Meta:
+	      model = Project
+	      # do not modify active field
+	      fields = ['name', 'description']
+	
+	   def __init__(self, *args, **kwargs):
+	      super(ProjectForm, self).__init__(*args, **kwargs)
+	      self.fields['name'].widget.attrs['autofocus'] = ''
+
+	   def save(self, commit=True):
+	      project = super(ProjectForm, self).save(commit=False)
+	      # do your logic here, validation, field update, ...
+	      if commit:
+	         project.save()
+	      return project
+	
+.. note:: 
+
+	in this example better to use validators on fields do not use clean_name
+	
+----
+
+Using form in views
+===================
+
+.. code:: python
+
+	facile_backlog/backlog/views.py
+	
+	from django.views import generic
+	from .models import Project
+	from .forms import ProjectForm
+	
+	class AddProject(generic.CreateView):
+	   # template is located at: 
+	   # facile_backlog/backlog/templates/add_project.html
+	   template_name = "backlog/add_project.html"
+	   model = Project
+	   form_class = ProjectForm
+	add_project = login_required(AddProject.as_view())
+	
 ----
 
 Tests
 =====
+
+- **WebTest** with ``django-webtest`` is the preferred way to create tests
+- Hard to test ajax / javascript pages
+- Better integration of WebTest in django 1.6
+- **FactoryBoy** a better replacement for fixtures
 
 ----
 

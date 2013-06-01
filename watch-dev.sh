@@ -1,5 +1,5 @@
 #!/bin/bash
-FILE="django.rst"
+FILE="django-dev.rst"
 
 LAST=`ls -l "$FILE"`
 while true; do
@@ -7,7 +7,7 @@ while true; do
   NEW=`ls -l "$FILE"`
   if [ "$NEW" != "$LAST" ]; then
     echo "Hovercraft !"
-    make
+    make compile_dev
     LAST="$NEW"
   fi
 done

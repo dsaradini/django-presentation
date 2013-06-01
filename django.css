@@ -1,5 +1,5 @@
 body {
-    font-size: 250%;
+    font-size: 200%;
     text-align: left;
     font-family: Arial;
 }
@@ -10,13 +10,14 @@ img {
 }
 
 .step {
-  width: 1024px;
+  width: 900px;
 }
 
 tt {
   background: #EFE;
   padding: 0 0.2rem;
   border: 1px solid #9B9;
+  box-shadow: 2px 2px 13px rgba(0,0,0,0.3);
 }
 
 
@@ -38,10 +39,7 @@ h1, h2, h3, h4 {
     text-align: center;
     margin-bottom: 0.3em;
     margin-top: 0.3em;
-}
-
-tt {
-    font-size: 125;
+    text-shadow: 2px 2px 13px rgba(0,0,0,0.3);
 }
 
 ul {
@@ -63,6 +61,37 @@ a {
     color: #060;
 }
 
+th {
+  font-width: bold;
+  background-color: green;
+  color: white;
+}
+
+th p {
+   text-align: center;
+}
+
+table {
+  width: 100%;
+  border: 1px solid green;
+}
+
 .hidden {
     display: none;
+}
+
+div#good-start img {
+  float: right;
+}
+
+div#duck-typing img {
+  float: right;
+}
+
+div#good-django img {
+   float: right;
+}
+
+div#django-not-good img {
+   float: right;
 }
