@@ -359,10 +359,18 @@ References
 
 -----
 
+:id: the-end
+
 Time to start using DJANGO
 ==========================
 
+
 .. image:: img/typing.gif
+	:width: 400px
+
+.. image:: img/django_pony.png
+	:width: 400px
+
 
 Thanks
 ------
