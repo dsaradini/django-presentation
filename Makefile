@@ -12,5 +12,5 @@ compile_dev:
 compile: compile_dev compile_highlevel
   
 show: compile 
-	!sh -c 'open "out-highlevel/intex.html"'
+	open "out-highlevel/index.html"
 

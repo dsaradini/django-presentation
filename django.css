@@ -95,3 +95,7 @@ div#good-django img {
 div#django-not-good img {
    float: right;
 }
+
+div#django-security img {
+   float: right;
+}
