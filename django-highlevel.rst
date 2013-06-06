@@ -35,8 +35,8 @@ What is Django
 
 ----
 
-Web framework
-=============
+Web frameworks
+==============
 
 .. image:: img/frameworks.png
 
@@ -52,15 +52,16 @@ Web framework
 Who is using Django
 ===================
 
-- instagram.com
-- disqus.com
-- bitbucket.org
-- orange.ch
-- lanyrd.com 
-- addons.mozilla.org
-- The guardian.co.uk
-- washingtonpost.com
-- pinterest
+- Instagram (instagram.com)
+- Disqus (disqus.com)
+- Bitbucket (bitbucket.org)
+- Orange (orange.ch)
+- Lanyrd (lanyrd.com)
+- Mozilla (addons.mozilla.org)
+- The Guardian (guardian.co.uk)
+- The Washington Post (washingtonpost.com)
+- Pinterest
+- exodoc / exopoint (comming soon)
 - **... many many more ...**
 
 ----
@@ -77,9 +78,9 @@ How "good" is django
 	:height: 250px
 
 - Running **24 / 7**
-- **600'000** visitor / day
-- **500'000** hit / hour
-- **1'000** concurrent user
+- **600'000** visitors / day
+- **500'000** hits / hour
+- **1'000** concurrent users
 - **240** concurrent requests 
 
 http://stackoverflow.com/questions/886221/does-django-scale
@@ -95,10 +96,9 @@ Where django is not so "good"
 .. image:: img/chuck.png
 	:height: 250px
 
-
-- Async sockets ( WebSocket, Comet, ... )
+- Async sockets (WebSocket, Comet, ...)
 - Not working well with **large files**
-- **NoSQL** database support is tricky ( becoming better )
+- **NoSQL** database support is tricky (becoming better)
 - Single page web application (by design)
 
 
@@ -107,12 +107,12 @@ Where django is not so "good"
 Django is not a magical wand
 ============================
 
-- Take care of your **database design**.
+- Take care of your **database design**
 - Choose the "right" packages
 - Avoid doing "heavy" work on a http request
 - Careful with **caching**
 - **HTML** and **CSS** knowledge required...
-- ... and **javascript** to enhance your pages.
+- ... and **javascript** to enhance your pages
 
 .. note::
 	
@@ -132,8 +132,8 @@ Django project structure
 	
 ----
 
-Supported database
-==================
+Supported databases
+===================
 
 **In django project**
 	- Postgres, SQLite (dev), Oracle, Mysql
@@ -142,15 +142,15 @@ Supported database
 **3rd party**
 	- Sybase, DB2, SQL Server, Firebird, ODBC, ...
 
-Django is database **agnostic** but, your project should **not**
+Django is database **agnostic**, but your project should **not**
 
 -----
 
 Overall Philosophy
 ==================
 
-- **MTV** *Model Template View*
-- **Loose coupling**, each layer should't "know" about other
+- **MTV** Model Template View
+- **Loose coupling**, each layer should't "know" about each other
 - **DRY** *Don't repeat yourself*
 - **Explicit** over **implicit**
 
@@ -214,7 +214,7 @@ Programing language
 * Templates are just **unicode text** with tags
 	* ``{% if var %} ... {% endif %}`` 
 	* ``{{ var }}`` 
-* ... but template are mostly web pages 
+* ... but templates are mostly web pages 
 
 .. image:: img/html_css.jpeg
 
@@ -234,8 +234,8 @@ Programing language
 Tools to work with django
 =========================
 
-* Text editor with python highlight (vi, emacs) + Shell
-* jetBRAINS PyCharm
+* Any text editor with python syntax highlighting (vi, emacs) + shell
+* JetBRAINS PyCharm
 * PyDev eclipse (good luck)
 * Wing IDE why not?
 
@@ -252,7 +252,11 @@ Useful Django projects
 - ``django-cms`` CMS
 - ``django-getpaid`` Payment gateway integration
 
-https://www.djangopackages.com/ 
+https://www.djangopackages.com/
+
+.. note:: 
+
+	- More than 1000 packages available
 
 
 ----
@@ -261,7 +265,7 @@ Free admin portal
 =================
 
 - **Generate** admin site based on model
-- Admin portal **enhanceable** by 3rd party project
+- Admin portal **enhanceable** by 3rd party projects
 
 
 .. image:: img/admin_site.png
