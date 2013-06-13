@@ -47,6 +47,7 @@ Web frameworks
 	- Play framework... play on both java / scala side
 	- CMS have built-in mode for pages / group / glogs / ...
 	- JBoss Seam is not really a lightweigth framework.
+	- .NET MVC not a real ORM framework...
 	- Weeceer --> grails
 	- openCms --> java servlet
 
@@ -59,7 +60,7 @@ Django - J2EE stack
 ===================
 
 
-- **Application server** vs **Web framework** in the cloud battleground
+- **Application server** vs **Web framework** in the cloud.
 	- **Operate all** and use what your need or...
 	- ... operate only what you **use**
 
