@@ -171,7 +171,7 @@ Django project structure
 ========================
 
 .. image:: img/project.png
-	:width: 800px
+	:height: 400px
 
 .. note::
 	- The goal of this slide is to understand modularity and reusability
@@ -183,7 +183,7 @@ Components
 ==========
 
 .. image:: img/overview.png
-	:width: 800px
+	:height: 600px
 
 .. note::
 
@@ -267,6 +267,7 @@ Free admin portal
 
 
 .. image:: img/admin_site.png
+	:height: 500px
 	
 .. note:: 
 
@@ -316,7 +317,7 @@ Simple deployment
 =================
 
 .. image:: img/deployment.png
-		:width: 800px
+		:height: 600px
 		
 .. note:: 
 	Apache to replace nginx

@@ -5,6 +5,12 @@ The presentation has 2 parts, an high level presentation targeted for people wan
 
 The second part is target for developers who want to know the basic principle behind django.
 
+Read it online
+--------------
+
+https://github.com/dsaradini/django-presentation/blob/master/django-highlevel.rst
+
+
 How to build the presentations
 ------------------------------
 
